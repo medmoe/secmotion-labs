@@ -2,10 +2,10 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SecMotion Defender's Labs</title>
-<meta name="description" content="Free practice labs for every SecMotion video: synthetic data, three questions, answers a week after release.">
+<meta name="description" content="Free practice labs for every SecMotion video: synthetic data, three questions, checked instantly on the page.">
 <style>
 :root{--bg:#0B1220;--panel:#131C31;--edge:#2A3857;--text:#E8EEF9;--muted:#8A99B8;
---amber:#FBBF24;--blue:#5B7CFA;--green:#4ADE80;--cyan:#22D3EE}
+--amber:#FBBF24;--blue:#5B7CFA;--green:#4ADE80;--cyan:#22D3EE;--red:#F87171}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);
 font:16px/1.55 "DejaVu Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -33,6 +33,9 @@ table{border-collapse:collapse;width:100%;font-size:.9rem}
 th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
 th{color:var(--muted);font-weight:bold}
 td code{white-space:nowrap;overflow-wrap:normal}
+.file td{font-family:"DejaVu Sans Mono",ui-monospace,Menlo,Consolas,monospace;
+font-size:.82rem}
+.file td.long{overflow-wrap:anywhere;min-width:17ch}
 ol{padding-left:1.4em} li{margin:6px 0}
 .muted{color:var(--muted)}
 .callout{border-left:3px solid var(--amber);padding:6px 12px;margin-top:12px;color:var(--text)}
@@ -44,15 +47,50 @@ details[open] summary{margin-bottom:8px}
 padding:0 5px;margin-left:6px}
 footer{color:var(--muted);font-size:.88rem;border-top:1px solid var(--edge);padding-top:14px}
 footer nav{margin-top:8px}
+.q{border-top:1px solid var(--edge);padding-top:14px;margin-top:14px}
+.q:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.q>p.qt{margin:0 0 8px} .q .num{color:var(--amber);font-weight:bold;margin-right:4px}
+.check{background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:10px 12px}
+.nojs .check{display:none}
+.ask{margin:0 0 6px;color:var(--muted);font-size:.92rem}
+.tip{margin:0 0 6px;color:var(--muted);font-size:.8rem}
+.item{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:8px 0}
+.item+.item{border-top:1px solid var(--edge)}
+.item .lab{flex:1 1 16em;min-width:0;overflow-wrap:break-word}
+.detail{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+select,input[type=text]{font:inherit;font-size:16px;background:var(--panel);color:var(--text);
+border:1px solid var(--edge);border-radius:6px;padding:6px 8px;min-height:40px}
+select{min-width:9.5em} input[type=text]{width:11em}
+.numbox{display:flex;align-items:center;gap:6px;flex-wrap:wrap} .unit{color:var(--muted)}
+.tick{display:flex;gap:10px;align-items:flex-start;flex:1 1 100%;cursor:pointer;min-height:32px}
+input[type=checkbox]{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--green)}
+.chips{display:flex;gap:8px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--edge);border-radius:6px;
+padding:4px 10px;cursor:pointer;font-family:"DejaVu Sans Mono",ui-monospace,monospace;min-height:40px}
+.fb{flex:1 1 100%;font-size:.9rem;display:none}
+.item.ok .fb,.item.no .fb,.item.shown .fb{display:block}
+.item.ok .fb::before{content:"✓ ";color:var(--green);font-weight:bold}
+.item.no .fb::before{content:"✗ ";color:var(--red);font-weight:bold}
+.item.shown .fb::before{content:"→ ";color:var(--amber);font-weight:bold}
+.item.ok select,.item.ok input[type=text]{border-color:var(--green)}
+.item.no select,.item.no input[type=text]{border-color:var(--red)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+button{font:inherit;border-radius:6px;padding:8px 16px;min-height:42px;cursor:pointer;
+border:1px solid var(--edge);background:var(--panel);color:var(--text)}
+button.go{background:var(--green);border-color:var(--green);color:var(--bg);font-weight:bold}
+.score{color:var(--muted);font-size:.92rem}
+.score.all{color:var(--green);font-weight:bold}
+.open{margin:0;border-left:3px solid var(--amber);padding-left:10px}
+.discuss{border-left:3px solid var(--cyan);padding:6px 12px;margin:16px 0 4px}
 </style></head>
 <body><main>
 <header>
 <div class="brand"><span><b>Sec<span class="slash">/</span>Motion</b> · Defender's Labs</span></div>
 <h1>A lab for every video</h1>
 <p class="muted">Every SecMotion video comes with a Defender's Lab: synthetic data from the
-video, three questions (find it, explain it, fix it), about 10–15 minutes by hand. Post your answers
-under the video; the answers go up here a week after release. Fork this repo and keep your answers
-as portfolio material.</p>
+video, three questions (find it, explain it, fix it), about 10–15 minutes. Each page checks your
+answers as you go and explains the right ones. Fork this repo and keep your answers as portfolio
+material.</p>
 </header>
 <section><p>The first lab arrives with the first video.</p></section>
 <footer>Everything here is synthetic: Byte Bakery is fictional, names are reserved

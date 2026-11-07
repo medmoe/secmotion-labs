@@ -6,7 +6,8 @@ explain it, fix it), and links to go further. About 10–15 minutes by hand.
 
 **Live:** https://medmoe.github.io/secmotion-labs/
 
-- Post your answers under the video. The answers go up here a week after release.
+- Answer on the page: it checks you instantly, explains the right answers and hints at the
+  wrong ones. The full worked answers are folded at the end.
 - Fork this repo and keep your answers as portfolio material.
 - Everything is synthetic: Byte Bakery is fictional, names are reserved `.example` domains,
   addresses are documentation IPs. Analysis and defence only: no attack code, no real systems.
