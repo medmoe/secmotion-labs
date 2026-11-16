@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" class="nojs"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defender's Lab · S1.01</title>
+<meta name="description" content="SecMotion Defender's Lab for S1.01 How Hackers Crack Your Password: synthetic data, three questions, checked instantly.">
+<style>
+:root{--bg:#0B1220;--panel:#131C31;--edge:#2A3857;--text:#E8EEF9;--muted:#8A99B8;
+--amber:#FBBF24;--blue:#5B7CFA;--green:#4ADE80;--cyan:#22D3EE;--red:#F87171}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:16px/1.55 "DejaVu Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:24px 16px 48px}
+a{color:var(--cyan)} a:hover{color:var(--text)}
+code,pre,.mono{font-family:"DejaVu Sans Mono",ui-monospace,Menlo,Consolas,monospace}
+code{background:var(--panel);border:1px solid var(--edge);border-radius:4px;padding:0 4px;
+font-size:.92em;overflow-wrap:anywhere}
+header{border-bottom:1px solid var(--edge);padding-bottom:16px;margin-bottom:8px}
+.brand{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);
+font-size:.9rem;letter-spacing:.04em}
+.brand b{color:var(--text)} .brand .slash{color:var(--green)}
+h1{font-size:1.7rem;line-height:1.25;margin:10px 0 6px}
+h1 .id{color:var(--muted);font-weight:normal;margin-right:8px}
+.meta{color:var(--muted);font-size:.92rem;display:flex;gap:6px 18px;flex-wrap:wrap}
+section{background:var(--panel);border:1px solid var(--edge);border-radius:10px;
+padding:16px 18px;margin:18px 0}
+section>h2{font-size:.8rem;letter-spacing:.14em;color:var(--muted);margin:0 0 10px;font-weight:bold}
+.file{border:1px solid var(--edge);border-radius:8px;overflow:hidden;margin:10px 0;background:var(--bg)}
+.filehead{display:flex;justify-content:space-between;gap:12px;padding:8px 12px;
+border-bottom:1px solid var(--edge);font-size:.9rem}
+pre{margin:0;padding:12px;overflow-x:auto;font-size:.88rem;line-height:1.5}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
+th{color:var(--muted);font-weight:bold}
+td code{white-space:nowrap;overflow-wrap:normal}
+.file td{font-family:"DejaVu Sans Mono",ui-monospace,Menlo,Consolas,monospace;
+font-size:.82rem}
+.file td.long{overflow-wrap:anywhere;min-width:17ch}
+.file td.short{white-space:nowrap}
+.file td.text{min-width:16ch}
+@media (max-width:520px){th,td{padding:5px 7px}}
+ol{padding-left:1.4em} li{margin:6px 0}
+.muted{color:var(--muted)}
+.callout{border-left:3px solid var(--amber);padding:6px 12px;margin-top:12px;color:var(--text)}
+details summary{cursor:pointer;color:var(--amber);font-weight:bold;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{margin-bottom:8px}
+.answers h2,.answers h3{font-size:1rem}
+.ext{font-size:.75rem;color:var(--muted);border:1px solid var(--edge);border-radius:4px;
+padding:0 5px;margin-left:6px}
+footer{color:var(--muted);font-size:.88rem;border-top:1px solid var(--edge);padding-top:14px}
+footer nav{margin-top:8px}
+.q{border-top:1px solid var(--edge);padding-top:14px;margin-top:14px}
+.q:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.q>p.qt{margin:0 0 8px} .q .num{color:var(--amber);font-weight:bold;margin-right:4px}
+.check{background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:10px 12px}
+.nojs .check,.nojs .jsonly,.js .nojsonly{display:none}
+.ask{margin:0 0 6px;color:var(--muted);font-size:.92rem}
+.tip{margin:0 0 6px;color:var(--muted);font-size:.8rem}
+.item{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:8px 0}
+.item+.item{border-top:1px solid var(--edge)}
+.item .lab{flex:1 1 16em;min-width:0;overflow-wrap:break-word}
+.detail{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+select,input[type=text]{font:inherit;font-size:16px;background:var(--panel);color:var(--text);
+border:1px solid var(--edge);border-radius:6px;padding:6px 8px;min-height:40px}
+select{min-width:9.5em} input[type=text]{width:11em}
+.numbox{display:flex;align-items:center;gap:6px;flex-wrap:wrap} .unit{color:var(--muted)}
+.tick{display:flex;gap:10px;align-items:flex-start;flex:1 1 100%;cursor:pointer;min-height:32px}
+input[type=checkbox]{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--green)}
+.chips{display:flex;gap:8px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--edge);border-radius:6px;
+padding:4px 10px;cursor:pointer;font-family:"DejaVu Sans Mono",ui-monospace,monospace;min-height:40px}
+.fb{flex:1 1 100%;font-size:.9rem;display:none}
+.item.ok .fb,.item.no .fb,.item.shown .fb{display:block}
+.item.ok .fb::before{content:"✓ ";color:var(--green);font-weight:bold}
+.item.no .fb::before{content:"✗ ";color:var(--red);font-weight:bold}
+.item.shown .fb::before{content:"→ ";color:var(--amber);font-weight:bold}
+.item.ok select,.item.ok input[type=text]{border-color:var(--green)}
+.item.no select,.item.no input[type=text]{border-color:var(--red)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+button{font:inherit;border-radius:6px;padding:8px 16px;min-height:42px;cursor:pointer;
+border:1px solid var(--edge);background:var(--panel);color:var(--text)}
+button.go{background:var(--green);border-color:var(--green);color:var(--bg);font-weight:bold}
+.score{color:var(--muted);font-size:.92rem}
+.score.all{color:var(--green);font-weight:bold}
+.open{margin:0;border-left:3px solid var(--amber);padding-left:10px}
+.discuss{border-left:3px solid var(--cyan);padding:6px 12px;margin:16px 0 4px}
+</style></head>
+<body><main>
+<header>
+<div class="brand"><span><b>Sec<span class="slash">/</span>Motion</b> · Defender's Lab</span></div>
+<h1><span class="id">S1.01</span>How Hackers Crack Your Password</h1>
+<div class="meta"><span>Security+ (SY0-701) objectives: 1.4 hashing, salting, key stretching · 2.4 password attacks (brute force, dictionary) · 4.6 password best practices</span>
+<span>~10–15 min · beginner</span></div>
+</header>
+<section><h2>THE DATA</h2>
+<p>Byte Bakery is fictional and so are its six customers. This is a toy copy of their password table as a thief would see it. The passwords themselves are not in it, and you don't need them: open <code>leaked_table.csv</code> and answer from the table and the video's numbers.</p>
+<div class='file'><div class='filehead'><span class='mono'>leaked_table.csv</span><a href='leaked_table.csv' download>⬇ download</a></div><div class='scroll'><table><thead><tr><th>row</th><th>user</th><th>algorithm</th><th>salt</th><th>hash</th></tr></thead><tbody><tr><td class='short'>1</td><td class='short'>nora</td><td class='short'>sha256</td><td class='short'>-</td><td class='long'>850665406e9c59083ab797944a92a0419e46cf19a24c3180ddbd29f35e60d4e2</td></tr><tr><td class='short'>2</td><td class='short'>omar</td><td class='short'>sha256</td><td class='short'>-</td><td class='long'>80fb2c08d9611d6096b438deab91b4d462786c1437b7921ee8ece7ceb6095c5f</td></tr><tr><td class='short'>3</td><td class='short'>priya</td><td class='short'>sha256</td><td class='short'>-</td><td class='long'>850665406e9c59083ab797944a92a0419e46cf19a24c3180ddbd29f35e60d4e2</td></tr><tr><td class='short'>4</td><td class='short'>quinn</td><td class='text'>scrypt N=16384 r=8 p=1</td><td class='long'>1897a0535e1ef0fc15762a63c00cfab4</td><td class='long'>49a21cdf41d53d2e5ad72f1a0f1571158ec0fe3251f8a0c52d2f4bcc634535f4</td></tr><tr><td class='short'>5</td><td class='short'>rosa</td><td class='text'>scrypt N=16384 r=8 p=1</td><td class='long'>7c758093557e87aab35116b6127c8c30</td><td class='long'>581146848dc045ac8e44360f1453e641f72063835172abbc493a72ff8c89620e</td></tr><tr><td class='short'>6</td><td class='short'>sam</td><td class='text'>scrypt N=16384 r=8 p=1</td><td class='long'>1897a0535e1ef0fc15762a63c00cfab4</td><td class='long'>49a21cdf41d53d2e5ad72f1a0f1571158ec0fe3251f8a0c52d2f4bcc634535f4</td></tr></tbody></table></div></div>
+</section>
+<section><h2>QUESTIONS</h2>
+<p class="muted jsonly">Answer on the page and press <strong>Check</strong>: right answers explain
+why, wrong ones get a hint, so try again. Your answers stay in this browser only.</p>
+<p class="muted nojsonly">Turn on JavaScript to check your answers here; the full worked answers
+are at the end.</p>
+<div class='q'><p class='qt'><span class='num'>1.</span><strong>Read.</strong> Which accounts share a password? You don't know a single password: say how you can tell from the table alone.</p><div class='check' data-q='1'><p class='ask'>Tick every account whose shared password the table shows.</p><div class='item' data-i='0'><label class='tick'><input type='checkbox' id='q1-0'><span class='lab'>1 · nora<span class='detail'>sha256 · salt none · hash 85066540…</span></span></label><div class='fb'></div></div><div class='item' data-i='1'><label class='tick'><input type='checkbox' id='q1-1'><span class='lab'>2 · omar<span class='detail'>sha256 · salt none · hash 80fb2c08…</span></span></label><div class='fb'></div></div><div class='item' data-i='2'><label class='tick'><input type='checkbox' id='q1-2'><span class='lab'>3 · priya<span class='detail'>sha256 · salt none · hash 85066540…</span></span></label><div class='fb'></div></div><div class='item' data-i='3'><label class='tick'><input type='checkbox' id='q1-3'><span class='lab'>4 · quinn<span class='detail'>scrypt · salt 1897a053… · hash 49a21cdf…</span></span></label><div class='fb'></div></div><div class='item' data-i='4'><label class='tick'><input type='checkbox' id='q1-4'><span class='lab'>5 · rosa<span class='detail'>scrypt · salt 7c758093… · hash 58114684…</span></span></label><div class='fb'></div></div><div class='item' data-i='5'><label class='tick'><input type='checkbox' id='q1-5'><span class='lab'>6 · sam<span class='detail'>scrypt · salt 1897a053… · hash 49a21cdf…</span></span></label><div class='fb'></div></div><div class='btns'><button type='button' class='go'>Check</button><button type='button' class='show'>Show the answers</button><span class='score' aria-live='polite'></span></div></div></div><div class='q'><p class='qt'><span class='num'>2.</span><strong>Reason.</strong> Which rows are stored the way the video recommends, and what is wrong with each of the others? (Hint: compare the salt column too.)</p><div class='check' data-q='2'><p class='ask'>Pick a verdict for each row.</p><div class='item' data-i='0'><span class='lab'>1 · nora<span class='detail'>sha256 · salt none · hash 85066540…</span></span><select id='q2-0' aria-label='1 · nora'><option value=''>choose…</option><option>fast hash, no salt</option><option>slow hash, salt reused</option><option>safe</option></select><div class='fb'></div></div><div class='item' data-i='1'><span class='lab'>2 · omar<span class='detail'>sha256 · salt none · hash 80fb2c08…</span></span><select id='q2-1' aria-label='2 · omar'><option value=''>choose…</option><option>fast hash, no salt</option><option>slow hash, salt reused</option><option>safe</option></select><div class='fb'></div></div><div class='item' data-i='2'><span class='lab'>3 · priya<span class='detail'>sha256 · salt none · hash 85066540…</span></span><select id='q2-2' aria-label='3 · priya'><option value=''>choose…</option><option>fast hash, no salt</option><option>slow hash, salt reused</option><option>safe</option></select><div class='fb'></div></div><div class='item' data-i='3'><span class='lab'>4 · quinn<span class='detail'>scrypt · salt 1897a053… · hash 49a21cdf…</span></span><select id='q2-3' aria-label='4 · quinn'><option value=''>choose…</option><option>fast hash, no salt</option><option>slow hash, salt reused</option><option>safe</option></select><div class='fb'></div></div><div class='item' data-i='4'><span class='lab'>5 · rosa<span class='detail'>scrypt · salt 7c758093… · hash 58114684…</span></span><select id='q2-4' aria-label='5 · rosa'><option value=''>choose…</option><option>fast hash, no salt</option><option>slow hash, salt reused</option><option>safe</option></select><div class='fb'></div></div><div class='item' data-i='5'><span class='lab'>6 · sam<span class='detail'>scrypt · salt 1897a053… · hash 49a21cdf…</span></span><select id='q2-5' aria-label='6 · sam'><option value=''>choose…</option><option>fast hash, no salt</option><option>slow hash, salt reused</option><option>safe</option></select><div class='fb'></div></div><div class='btns'><button type='button' class='go'>Check</button><button type='button' class='show'>Show the answers</button><span class='score' aria-live='polite'></span></div></div></div><div class='q'><p class='qt'><span class='num'>3.</span><strong>Apply.</strong> Priya switches to 5 random words from the EFF list (7,776 words) and Byte Bakery moves her to scrypt with a fresh salt. An attacker who doesn't know her words must try passphrases at random: how many guesses on average? How long is that on one laptop core with plain SHA-256 (1,554,687 per second) and with scrypt (24.5 per second), the rates measured in the video? Arithmetic only.</p><div class='check' data-q='3'><p class='ask'>Fill in each box (round as you like).</p><p class='tip'>Any way of writing a number works: 263158, 263,158, 2.6e5, 2.6×10^5, 18 billion.</p><div class='item' data-i='0'><label class='lab' for='q3-0'>guesses on average</label><span class='numbox'><input id='q3-0' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>guesses</span></span><div class='fb'></div></div><div class='item' data-i='1'><label class='lab' for='q3-1'>plain SHA-256, one core</label><span class='numbox'><input id='q3-1' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>years</span></span><div class='fb'></div></div><div class='item' data-i='2'><label class='lab' for='q3-2'>scrypt, one core</label><span class='numbox'><input id='q3-2' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>years</span></span><div class='fb'></div></div><div class='btns'><button type='button' class='go'>Check</button><button type='button' class='show'>Show the answers</button><span class='score' aria-live='polite'></span></div></div></div>
+<p class='discuss'><strong>Your turn:</strong> If you ran Byte Bakery, which of the six accounts would you fix first, and how? Reply with the user name. Reply under the video.</p>
+<details class='answers'><summary>▸ The full worked answers</summary><h2>Worked answers</h2>
+<h3>1. Shared passwords</h3>
+<div class='scroll'><table><thead><tr><th>Rows</th><th>Accounts</th><th>How you can tell</th></tr></thead><tbody><tr><td>1, 3</td><td>nora, priya</td><td>identical SHA-256 hashes: no salt, so the same password always gives the same hash</td></tr><tr><td>4, 6</td><td>quinn, sam</td><td>identical scrypt hashes, because both rows use the <strong>same salt</strong></td></tr><tr><td>5</td><td>rosa</td><td>also has quinn's password, and <strong>nobody can see it</strong>: her own salt makes her hash different. That is what a salt is for. (We know because we made the data.)</td></tr></tbody></table></div>
+<h3>2. Stored safely?</h3>
+<div class='scroll'><table><thead><tr><th>Row</th><th>Verdict</th><th>Why</th></tr></thead><tbody><tr><td>1–3</td><td>not safe</td><td>plain SHA-256 is fast (1,554,687 guesses a second on one core, 21.2 billion on one GPU) and unsalted, so equal passwords show up as equal hashes and one guess tests every row at once</td></tr><tr><td>4, 6</td><td>slow hash, broken salt</td><td>scrypt is right, but the salt is reused: the two rows leak that they match. Give every user a fresh random salt (<code>secrets.token_bytes(16)</code>)</td></tr><tr><td>5</td><td>safe</td><td>scrypt + its own random salt: the way the video recommends</td></tr></tbody></table></div>
+<h3>3. Five random words</h3>
+<div class='scroll'><table><thead><tr><th>Step</th><th>Arithmetic</th><th>Result</th></tr></thead><tbody><tr><td>all passphrases</td><td>7,776⁵</td><td>2.84 × 10¹⁹</td></tr><tr><td>on average, half</td><td>2.84 × 10¹⁹ ÷ 2</td><td>1.42 × 10¹⁹ guesses</td></tr><tr><td>plain SHA-256, one core</td><td>1.42 × 10¹⁹ ÷ 1,554,687 / s</td><td>290 thousand years</td></tr><tr><td>scrypt, one core</td><td>1.42 × 10¹⁹ ÷ 24.5 / s</td><td>18 billion years: longer than the universe has existed (13.8 billion)</td></tr></tbody></table></div>
+<p>Even with plain SHA-256 on one RTX 4090 it is 21 years (the video's number). The words do most of the work; scrypt multiplies it again, about 63,457 times.</p></details>
+</section>
+<section><h2>GO FURTHER (EXTERNAL, FREE, LEGAL)</h2><ul><li><a href='https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html' rel='noopener'>OWASP Password Storage Cheat Sheet</a><span class='ext'>external</span> <span class='muted'>how real sites should store passwords: compare it with rows 1–6</span></li><li><a href='https://www.eff.org/dice' rel='noopener'>EFF Dice-Generated Passphrases</a><span class='ext'>external</span> <span class='muted'>roll five real dice and make your own 5-word passphrase</span></li></ul></section>
+<footer>Everything here is synthetic: Byte Bakery is fictional, names are reserved
+<span class="mono">.example</span> domains, addresses are documentation IPs.
+Analysis and defence only.
+<nav><a href="../">All labs ▸</a></nav></footer>
+</main>
+<script type="application/json" id="key">{"id": "S1.01", "checks": {"1": {"kind": "ticks", "ask": "Tick every account whose shared password the table shows.", "items": [{"label": "1 · nora", "detail": "sha256 · salt none · hash 85066540…", "answer": true, "why": "same hash as row 3 (priya): no salt, so the same password gives the same hash.", "hint": "Compare its hash with every other row."}, {"label": "2 · omar", "detail": "sha256 · salt none · hash 80fb2c08…", "answer": false, "why": "its hash matches no other row.", "hint": "Find another row with exactly the same hash. Is there one?"}, {"label": "3 · priya", "detail": "sha256 · salt none · hash 85066540…", "answer": true, "why": "same hash as row 1 (nora): no salt, so the same password gives the same hash.", "hint": "Compare its hash with every other row."}, {"label": "4 · quinn", "detail": "scrypt · salt 1897a053… · hash 49a21cdf…", "answer": true, "why": "same hash as row 6 (sam): both rows use the same salt, so the match shows.", "hint": "Compare its hash with every other row."}, {"label": "5 · rosa", "detail": "scrypt · salt 7c758093… · hash 58114684…", "answer": false, "why": "its hash matches no other row. Secretly rosa has quinn's password too (we made the data): her own salt hides it. That is what a salt is for.", "hint": "Find another row with exactly the same hash. Is there one?"}, {"label": "6 · sam", "detail": "scrypt · salt 1897a053… · hash 49a21cdf…", "answer": true, "why": "same hash as row 4 (quinn): both rows use the same salt, so the match shows.", "hint": "Compare its hash with every other row."}]}, "2": {"kind": "choice", "ask": "Pick a verdict for each row.", "options": ["fast hash, no salt", "slow hash, salt reused", "safe"], "items": [{"label": "1 · nora", "detail": "sha256 · salt none · hash 85066540…", "answer": "fast hash, no salt", "why": "plain SHA-256 is fast (1,554,687 guesses a second on one core) and unsalted: equal passwords show up as equal hashes, one guess tests every row.", "hint": "Check the algorithm column, then whether this salt appears in another row."}, {"label": "2 · omar", "detail": "sha256 · salt none · hash 80fb2c08…", "answer": "fast hash, no salt", "why": "plain SHA-256 is fast (1,554,687 guesses a second on one core) and unsalted: equal passwords show up as equal hashes, one guess tests every row.", "hint": "Check the algorithm column, then whether this salt appears in another row."}, {"label": "3 · priya", "detail": "sha256 · salt none · hash 85066540…", "answer": "fast hash, no salt", "why": "plain SHA-256 is fast (1,554,687 guesses a second on one core) and unsalted: equal passwords show up as equal hashes, one guess tests every row.", "hint": "Check the algorithm column, then whether this salt appears in another row."}, {"label": "4 · quinn", "detail": "scrypt · salt 1897a053… · hash 49a21cdf…", "answer": "slow hash, salt reused", "why": "scrypt is right, but this salt is reused, so the two rows leak that they match. Give every user a fresh random salt.", "hint": "Check the algorithm column, then whether this salt appears in another row."}, {"label": "5 · rosa", "detail": "scrypt · salt 7c758093… · hash 58114684…", "answer": "safe", "why": "scrypt with its own random salt: the way the video recommends.", "hint": "Check the algorithm column, then whether this salt appears in another row."}, {"label": "6 · sam", "detail": "scrypt · salt 1897a053… · hash 49a21cdf…", "answer": "slow hash, salt reused", "why": "scrypt is right, but this salt is reused, so the two rows leak that they match. Give every user a fresh random salt.", "hint": "Check the algorithm column, then whether this salt appears in another row."}]}, "3": {"kind": "number", "ask": "Fill in each box (round as you like).", "items": [{"label": "guesses on average", "answer": 1.421514401496485e+19, "tol": 0.02, "unit": "guesses", "hint": "All passphrases: 7,776 to the power 5. On average you find it halfway.", "why": "7,776⁵ = 2.84 × 10¹⁹, half is 1.42 × 10¹⁹."}, {"label": "plain SHA-256, one core", "answer": 290000.0, "tol": 0.05, "unit": "years", "hint": "guesses ÷ 1,554,687 per second gives seconds; a year is about 31.6 million seconds.", "why": "1.42 × 10¹⁹ ÷ 1,554,687 / s ≈ 290 thousand years."}, {"label": "scrypt, one core", "answer": 18400000000.0, "tol": 0.05, "unit": "years", "hint": "guesses ÷ 24.5 per second, then into years.", "why": "1.42 × 10¹⁹ ÷ 24.5 / s ≈ 18 billion years: longer than the universe has existed (13.8 billion)."}]}}}</script>
+<script>
+(function(){
+document.documentElement.className='js';
+var K=JSON.parse(document.getElementById('key').textContent),C=K.checks,store='secmotion-lab:'+K.id;
+function load(){try{return JSON.parse(localStorage.getItem(store))||{}}catch(e){return {}}}
+function save(){var s={};document.querySelectorAll('.check input,.check select').forEach(function(e){
+ s[e.id]=e.type==='checkbox'?e.checked:e.value});try{localStorage.setItem(store,JSON.stringify(s))}catch(e){}}
+var SUP='⁰¹²³⁴⁵⁶⁷⁸⁹',MULT={k:1e3,thousand:1e3,m:1e6,million:1e6,mn:1e6,b:1e9,bn:1e9,
+ billion:1e9,t:1e12,trillion:1e12};
+function num(s,unit){s=s.toLowerCase().replace(/[−–]/g,'-').replace(/[€$£]/g,'').replace(/^\s*(?:eur|usd|gbp)\s*/,'');
+ var d=s.match(/^\s*(\d+)\s*(?:min|m|:)\s*(\d+(?:\.\d+)?)?\s*(?:s|sec)?\s*$/);
+ if(d&&unit==='seconds')return 60*d[1]+(d[2]?+d[2]:0);
+ if(unit){var u=unit.toLowerCase().trim(),w=s.trim().match(/^(.*\d)\s*([a-z]+)\.?$/);
+  if(u&&s.trim().endsWith(u))s=s.trim().slice(0,-u.length);
+  else if(w&&!MULT[w[2]]&&(u.indexOf(w[2])===0||w[2].length>2&&u.indexOf(w[2].slice(0,-1))===0))s=w[1]}
+ s=s.replace(/[,\s_ ]/g,'').replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g,function(m){
+  return '^'+m.split('').map(function(c){var d=SUP.indexOf(c);return d<0?'-':d}).join('')});
+ s=s.replace(/(?:×|x|\*)10\^?(-?\d+)/,'e$1').replace(/^10\^(-?\d+)/,'1e$1');
+ var m=s.match(/^(-?\d*\.?\d+(?:e[-+]?\d+)?)([a-z]*)$/);if(!m)return NaN;
+ if(!m[2])return parseFloat(m[1]);return MULT[m[2]]?parseFloat(m[1])*MULT[m[2]]:NaN}
+function same(a,b){return a.length===b.length&&a.every(function(x){return b.indexOf(x)>=0})}
+function read(q,c,i,el){var key='q'+q+'-'+i;
+ if(c.kind==='choice')return el.querySelector('select').value;
+ if(c.kind==='ticks')return el.querySelector('input').checked;
+ if(c.kind==='multi')return c.options.filter(function(o,j){return document.getElementById(key+'-'+j).checked});
+ return el.querySelector('input').value}
+function right(c,it,v){if(c.kind==='number'){if(!v.trim())return null;var x=num(v,it.unit);if(isNaN(x))return 'bad';
+  return Math.abs(x-it.answer)<=Math.max((it.tol||0)*Math.abs(it.answer),1e-9)}
+ if(c.kind==='multi')return same(v,it.answer);if(c.kind==='choice'&&!v)return null;return v===it.answer}
+function shown(c,it){if(c.kind==='ticks')return it.answer?'tick it':'leave it';
+ if(c.kind==='multi')return it.answer.length?it.answer.join(' + '):'none';
+ if(c.kind==='number')return Number(it.answer).toLocaleString('en-US')+(it.unit?' '+it.unit:'');return it.answer}
+function check(box,reveal){var q=box.dataset.q,c=C[q],ok=0,blank=0;
+ box.querySelectorAll('.item').forEach(function(el){var i=+el.dataset.i,it=c.items[i],fb=el.querySelector('.fb');
+  el.classList.remove('ok','no','shown');var r=right(c,it,read(q,c,i,el));
+  if(reveal&&r!==true){el.classList.add('shown');fb.innerHTML=shown(c,it)+': '+it.why;return}
+  if(r===null){blank++;return}
+  if(r==='bad'){el.classList.add('no');fb.textContent='I can’t read that as a number. Try 263158, 2.6e5 or 18 billion.';return}
+  if(r){ok++;el.classList.add('ok');fb.innerHTML=it.why}
+  else{el.classList.add('no');fb.innerHTML=it.hint||(c.kind==='number'?'Not quite: check the arithmetic and the unit.':'Not quite: look at the data again.')}});
+ var n=c.items.length,sc=box.querySelector('.score');
+ sc.className='score'+(ok===n?' all':'');
+ sc.textContent=reveal?'answers shown':ok===n?'All '+n+' right ✓':ok+' of '+n+' right'+(blank?' · '+blank+' not answered':'')}
+var saved=load();
+document.querySelectorAll('.check input,.check select').forEach(function(e){if(e.id in saved){
+ if(e.type==='checkbox')e.checked=saved[e.id];else e.value=saved[e.id]}e.addEventListener('change',save)});
+document.querySelectorAll('.check').forEach(function(box){
+ box.querySelector('.go').addEventListener('click',function(){check(box,false)});
+ box.querySelector('.show').addEventListener('click',function(){check(box,true)});
+ box.addEventListener('keydown',function(ev){if(ev.key==='Enter'&&ev.target.tagName==='INPUT'&&ev.target.type==='text'){ev.preventDefault();check(box,false)}})});
+})();
+</script>
+</body></html>
