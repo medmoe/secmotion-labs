@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" class="nojs"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defender's Lab · S4.01</title>
+<meta name="description" content="SecMotion Defender's Lab for S4.01 Symmetric vs Asymmetric Encryption: synthetic data, three questions, checked instantly.">
+<style>
+:root{--bg:#0B1220;--panel:#131C31;--edge:#2A3857;--text:#E8EEF9;--muted:#8A99B8;
+--amber:#FBBF24;--blue:#5B7CFA;--green:#4ADE80;--cyan:#22D3EE;--red:#F87171}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:16px/1.55 "DejaVu Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:24px 16px 48px}
+a{color:var(--cyan)} a:hover{color:var(--text)}
+code,pre,.mono{font-family:"DejaVu Sans Mono",ui-monospace,Menlo,Consolas,monospace}
+code{background:var(--panel);border:1px solid var(--edge);border-radius:4px;padding:0 4px;
+font-size:.92em;overflow-wrap:anywhere}
+header{border-bottom:1px solid var(--edge);padding-bottom:16px;margin-bottom:8px}
+.brand{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);
+font-size:.9rem;letter-spacing:.04em}
+.brand b{color:var(--text)} .brand .slash{color:var(--green)}
+h1{font-size:1.7rem;line-height:1.25;margin:10px 0 6px}
+h1 .id{color:var(--muted);font-weight:normal;margin-right:8px}
+.meta{color:var(--muted);font-size:.92rem;display:flex;gap:6px 18px;flex-wrap:wrap}
+section{background:var(--panel);border:1px solid var(--edge);border-radius:10px;
+padding:16px 18px;margin:18px 0}
+section>h2{font-size:.8rem;letter-spacing:.14em;color:var(--muted);margin:0 0 10px;font-weight:bold}
+.file{border:1px solid var(--edge);border-radius:8px;overflow:hidden;margin:10px 0;background:var(--bg)}
+.filehead{display:flex;justify-content:space-between;gap:12px;padding:8px 12px;
+border-bottom:1px solid var(--edge);font-size:.9rem}
+pre{margin:0;padding:12px;overflow-x:auto;font-size:.88rem;line-height:1.5}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
+th{color:var(--muted);font-weight:bold}
+td code{white-space:nowrap;overflow-wrap:normal}
+.file td{font-family:"DejaVu Sans Mono",ui-monospace,Menlo,Consolas,monospace;
+font-size:.82rem}
+.file td.long{overflow-wrap:anywhere;min-width:17ch}
+.file td.short{white-space:nowrap}
+.file td.text{min-width:16ch}
+@media (max-width:520px){th,td{padding:5px 7px}}
+ol{padding-left:1.4em} li{margin:6px 0}
+.muted{color:var(--muted)}
+.callout{border-left:3px solid var(--amber);padding:6px 12px;margin-top:12px;color:var(--text)}
+details summary{cursor:pointer;color:var(--amber);font-weight:bold;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{margin-bottom:8px}
+.answers h2,.answers h3{font-size:1rem}
+.ext{font-size:.75rem;color:var(--muted);border:1px solid var(--edge);border-radius:4px;
+padding:0 5px;margin-left:6px}
+footer{color:var(--muted);font-size:.88rem;border-top:1px solid var(--edge);padding-top:14px}
+footer nav{margin-top:8px}
+.q{border-top:1px solid var(--edge);padding-top:14px;margin-top:14px}
+.q:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.q>p.qt{margin:0 0 8px} .q .num{color:var(--amber);font-weight:bold;margin-right:4px}
+.check{background:var(--bg);border:1px solid var(--edge);border-radius:8px;padding:10px 12px}
+.nojs .check,.nojs .jsonly,.js .nojsonly{display:none}
+.ask{margin:0 0 6px;color:var(--muted);font-size:.92rem}
+.tip{margin:0 0 6px;color:var(--muted);font-size:.8rem}
+.item{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:8px 0}
+.item+.item{border-top:1px solid var(--edge)}
+.item .lab{flex:1 1 16em;min-width:0;overflow-wrap:break-word}
+.detail{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+select,input[type=text]{font:inherit;font-size:16px;background:var(--panel);color:var(--text);
+border:1px solid var(--edge);border-radius:6px;padding:6px 8px;min-height:40px}
+select{min-width:9.5em} input[type=text]{width:11em}
+.numbox{display:flex;align-items:center;gap:6px;flex-wrap:wrap} .unit{color:var(--muted)}
+.tick{display:flex;gap:10px;align-items:flex-start;flex:1 1 100%;cursor:pointer;min-height:32px}
+input[type=checkbox]{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--green)}
+.chips{display:flex;gap:8px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--edge);border-radius:6px;
+padding:4px 10px;cursor:pointer;font-family:"DejaVu Sans Mono",ui-monospace,monospace;min-height:40px}
+.fb{flex:1 1 100%;font-size:.9rem;display:none}
+.item.ok .fb,.item.no .fb,.item.shown .fb{display:block}
+.item.ok .fb::before{content:"✓ ";color:var(--green);font-weight:bold}
+.item.no .fb::before{content:"✗ ";color:var(--red);font-weight:bold}
+.item.shown .fb::before{content:"→ ";color:var(--amber);font-weight:bold}
+.item.ok select,.item.ok input[type=text]{border-color:var(--green)}
+.item.no select,.item.no input[type=text]{border-color:var(--red)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+button{font:inherit;border-radius:6px;padding:8px 16px;min-height:42px;cursor:pointer;
+border:1px solid var(--edge);background:var(--panel);color:var(--text)}
+button.go{background:var(--green);border-color:var(--green);color:var(--bg);font-weight:bold}
+.score{color:var(--muted);font-size:.92rem}
+.score.all{color:var(--green);font-weight:bold}
+.open{margin:0;border-left:3px solid var(--amber);padding-left:10px}
+.discuss{border-left:3px solid var(--cyan);padding:6px 12px;margin:16px 0 4px}
+</style></head>
+<body><main>
+<header>
+<div class="brand"><span><b>Sec<span class="slash">/</span>Motion</b> · Defender's Lab</span></div>
+<h1><span class="id">S4.01</span>Symmetric vs Asymmetric Encryption</h1>
+<div class="meta"><span>Security+ (SY0-701) objective 1.4: encryption (symmetric, asymmetric), key exchange, key length, digital signatures</span>
+<span>~10–15 min · beginner</span></div>
+</header>
+<section><h2>THE DATA</h2>
+<p>Byte Bakery is fictional. Its new security lead (you) found this list of every place the bakery uses encryption. Open <code>inventory.csv</code> and review it with what the video showed: no keys, no tools, just the table and arithmetic.</p>
+<div class='file'><div class='filehead'><span class='mono'>inventory.csv</span><a href='inventory.csv' download>⬇ download</a></div><div class='scroll'><table><thead><tr><th>row</th><th>system</th><th>protects</th><th>who must read it</th><th>current setup</th></tr></thead><tbody><tr><td class='short'>1</td><td class='text'>online shop (shop.<wbr>bytebakery.<wbr>example)</td><td class='text'>orders and card numbers on their way</td><td class='text'>the customer and the shop</td><td class='text'>HTTPS with TLS 1.3: a public-key handshake agrees on a fresh key, then AES-128-GCM</td></tr><tr><td class='short'>2</td><td class='text'>nightly backup of the orders database</td><td class='short'>a 50 MB file</td><td class='text'>the owner, when restoring</td><td class='text'>RSA-2048-OAEP with the owner&#x27;s public key, applied to the whole file</td></tr><tr><td class='short'>3</td><td class='text'>customers&#x27; cake-design photos, stored</td><td class='text'>uploaded images</td><td class='short'>the shop</td><td class='text'>AES-128 in ECB mode, one key</td></tr><tr><td class='short'>4</td><td class='text'>staff chat (40 people)</td><td class='text'>private messages between two staff</td><td class='text'>the two people chatting</td><td class='text'>one AES-128 key shared by all 40 staff, changed once a year</td></tr><tr><td class='short'>5</td><td class='text'>recipe updates sent to franchise ovens</td><td class='text'>recipes (not secret)</td><td class='text'>every oven, which must trust them</td><td class='text'>RSA-PSS signature with the bakery&#x27;s private key; the ovens hold the public key</td></tr><tr><td class='short'>6</td><td class='text'>supplier portal (supplier.<wbr>bytebakery.<wbr>example)</td><td class='text'>invoices on their way</td><td class='text'>the bakery and the supplier</td><td class='text'>TLS 1.2 with RSA key exchange: each session&#x27;s key is wrapped with the portal&#x27;s long-term RSA key, then AES-128-GCM</td></tr><tr><td class='short'>7</td><td class='text'>the manager&#x27;s laptop</td><td class='text'>everything on its disk</td><td class='text'>the manager only</td><td class='text'>AES-128 full-disk encryption, unlocked by the manager&#x27;s passphrase</td></tr></tbody></table></div></div>
+</section>
+<section><h2>QUESTIONS</h2>
+<p class="muted jsonly">Answer on the page and press <strong>Check</strong>: right answers explain
+why, wrong ones get a hint, so try again. Your answers stay in this browser only.</p>
+<p class="muted nojsonly">Turn on JavaScript to check your answers here; the full worked answers
+are at the end.</p>
+<div class='q'><p class='qt'><span class='num'>1.</span><strong>Read.</strong> For each of the seven rows: is it symmetric, asymmetric, or both? Say which words in the setup column tell you.</p><div class='check' data-q='1'><p class='ask'>Pick one for each row.</p><div class='item' data-i='0'><span class='lab'>1 · online shop (shop.<wbr>bytebakery.<wbr>example)<span class='detail'>HTTPS with TLS 1.3: a public-key handshake agrees on a fresh key, then AES-128-GCM</span></span><select id='q1-0' aria-label='1 · online shop (shop.bytebakery.example)'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='item' data-i='1'><span class='lab'>2 · nightly backup of the orders database<span class='detail'>RSA-2048-OAEP with the owner's public key, applied to the whole file</span></span><select id='q1-1' aria-label='2 · nightly backup of the orders database'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='item' data-i='2'><span class='lab'>3 · customers' cake-design photos, stored<span class='detail'>AES-128 in ECB mode, one key</span></span><select id='q1-2' aria-label='3 · customers&#x27; cake-design photos, stored'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='item' data-i='3'><span class='lab'>4 · staff chat (40 people)<span class='detail'>one AES-128 key shared by all 40 staff, changed once a year</span></span><select id='q1-3' aria-label='4 · staff chat (40 people)'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='item' data-i='4'><span class='lab'>5 · recipe updates sent to franchise ovens<span class='detail'>RSA-PSS signature with the bakery's private key; the ovens hold the public key</span></span><select id='q1-4' aria-label='5 · recipe updates sent to franchise ovens'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='item' data-i='5'><span class='lab'>6 · supplier portal (supplier.<wbr>bytebakery.<wbr>example)<span class='detail'>TLS 1.2 with RSA key exchange: each session's key is wrapped with the portal's long-term RSA key, then AES-128-GCM</span></span><select id='q1-5' aria-label='6 · supplier portal (supplier.bytebakery.example)'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='item' data-i='6'><span class='lab'>7 · the manager's laptop<span class='detail'>AES-128 full-disk encryption, unlocked by the manager's passphrase</span></span><select id='q1-6' aria-label='7 · the manager&#x27;s laptop'><option value=''>choose…</option><option>symmetric</option><option>asymmetric</option><option>both</option></select><div class='fb'></div></div><div class='btns'><button type='button' class='go'>Check</button><button type='button' class='show'>Show the answers</button><span class='score' aria-live='polite'></span></div></div></div><div class='q'><p class='qt'><span class='num'>2.</span><strong>Reason.</strong> Four rows have a mistake the video warns about. Which ones, what can go wrong, and what would you use instead?</p><div class='check' data-q='2'><p class='ask'>Tick the four rows with a mistake.</p><div class='item' data-i='0'><label class='tick'><input type='checkbox' id='q2-0'><span class='lab'>1 · online shop (shop.<wbr>bytebakery.<wbr>example)<span class='detail'>HTTPS with TLS 1.3: a public-key handshake agrees on a fresh key, then AES-128-GCM</span></span></label><div class='fb'></div></div><div class='item' data-i='1'><label class='tick'><input type='checkbox' id='q2-1'><span class='lab'>2 · nightly backup of the orders database<span class='detail'>RSA-2048-OAEP with the owner's public key, applied to the whole file</span></span></label><div class='fb'></div></div><div class='item' data-i='2'><label class='tick'><input type='checkbox' id='q2-2'><span class='lab'>3 · customers' cake-design photos, stored<span class='detail'>AES-128 in ECB mode, one key</span></span></label><div class='fb'></div></div><div class='item' data-i='3'><label class='tick'><input type='checkbox' id='q2-3'><span class='lab'>4 · staff chat (40 people)<span class='detail'>one AES-128 key shared by all 40 staff, changed once a year</span></span></label><div class='fb'></div></div><div class='item' data-i='4'><label class='tick'><input type='checkbox' id='q2-4'><span class='lab'>5 · recipe updates sent to franchise ovens<span class='detail'>RSA-PSS signature with the bakery's private key; the ovens hold the public key</span></span></label><div class='fb'></div></div><div class='item' data-i='5'><label class='tick'><input type='checkbox' id='q2-5'><span class='lab'>6 · supplier portal (supplier.<wbr>bytebakery.<wbr>example)<span class='detail'>TLS 1.2 with RSA key exchange: each session's key is wrapped with the portal's long-term RSA key, then AES-128-GCM</span></span></label><div class='fb'></div></div><div class='item' data-i='6'><label class='tick'><input type='checkbox' id='q2-6'><span class='lab'>7 · the manager's laptop<span class='detail'>AES-128 full-disk encryption, unlocked by the manager's passphrase</span></span></label><div class='fb'></div></div><div class='btns'><button type='button' class='go'>Check</button><button type='button' class='show'>Show the answers</button><span class='score' aria-live='polite'></span></div></div></div><div class='q'><p class='qt'><span class='num'>3.</span><strong>Apply.</strong> (a) Row 4's fix: if every pair of the 40 staff had its own shared AES key, how many keys is that? How many with one key pair per person? (b) Row 2: the owner restores the 50 MB backup. RSA-OAEP handles at most 190 bytes per operation, and one private-key operation takes about 991 µs in native code (the rate quoted in the video). How many operations, how long, and how big is the encrypted file? Compare with AES at about 8 ns per 16-byte block. Arithmetic only.</p><div class='check' data-q='3'><p class='ask'>Fill in each box (round as you like).</p><p class='tip'>Any way of writing a number works: 263158, 263,158, 2.6e5, 2.6×10^5, 18 billion; a time also as 4 min 21 s.</p><div class='item' data-i='0'><label class='lab' for='q3-0'>(a) a shared AES key for every pair of the 40 staff</label><span class='numbox'><input id='q3-0' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>keys</span></span><div class='fb'></div></div><div class='item' data-i='1'><label class='lab' for='q3-1'>(a) one key pair per person</label><span class='numbox'><input id='q3-1' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>keys</span></span><div class='fb'></div></div><div class='item' data-i='2'><label class='lab' for='q3-2'>(b) RSA operations to restore the backup</label><span class='numbox'><input id='q3-2' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>operations</span></span><div class='fb'></div></div><div class='item' data-i='3'><label class='lab' for='q3-3'>(b) how long the restore takes</label><span class='numbox'><input id='q3-3' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>seconds</span></span><div class='fb'></div></div><div class='item' data-i='4'><label class='lab' for='q3-4'>(b) size of the RSA-encrypted file</label><span class='numbox'><input id='q3-4' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>MB</span></span><div class='fb'></div></div><div class='item' data-i='5'><label class='lab' for='q3-5'>(b) AES for the same file</label><span class='numbox'><input id='q3-5' type='text' inputmode='decimal' autocomplete='off' placeholder='your answer'> <span class='unit'>ms</span></span><div class='fb'></div></div><div class='btns'><button type='button' class='go'>Check</button><button type='button' class='show'>Show the answers</button><span class='score' aria-live='polite'></span></div></div></div>
+<p class='discuss'><strong>Your turn:</strong> Which of the four mistakes would you fix first at Byte Bakery? Reply with its row number. Reply under the video.</p>
+<details class='answers'><summary>▸ The full worked answers</summary><h2>Worked answers</h2>
+<h3>1. Symmetric, asymmetric or both</h3>
+<div class='scroll'><table><thead><tr><th>Row</th><th>System</th><th>Kind</th><th>The clue</th></tr></thead><tbody><tr><td>1</td><td>online shop (shop.bytebakery.example)</td><td>both (hybrid)</td><td>“public-key handshake … then AES”</td></tr><tr><td>2</td><td>nightly backup of the orders database</td><td>asymmetric</td><td>“RSA-2048-OAEP … public key”</td></tr><tr><td>3</td><td>customers' cake-design photos, stored</td><td>symmetric</td><td>“AES-128”, one key</td></tr><tr><td>4</td><td>staff chat (40 people)</td><td>symmetric</td><td>“one AES-128 key shared”</td></tr><tr><td>5</td><td>recipe updates sent to franchise ovens</td><td>asymmetric</td><td>“private key … public key” (a signature)</td></tr><tr><td>6</td><td>supplier portal (supplier.bytebakery.example)</td><td>both (hybrid)</td><td>“session key … wrapped with … RSA key, then AES”</td></tr><tr><td>7</td><td>the manager's laptop</td><td>symmetric</td><td>“AES-128”, one person</td></tr></tbody></table></div>
+<h3>2. The four mistakes</h3>
+<div class='scroll'><table><thead><tr><th>Row</th><th>What goes wrong, and the fix</th></tr></thead><tbody><tr><td>2</td><td>RSA-OAEP takes at most 190 bytes per operation and is slow (question 3). Use hybrid: AES-128-GCM for the file, the owner's RSA key wraps only the 16-byte AES key</td></tr><tr><td>3</td><td>ECB encrypts equal blocks to equal blocks, so a picture's outline shows through (the cupcake logo). Same key, but GCM mode: noise, and tampering is detected</td></tr><tr><td>4</td><td>everyone can read every chat, and anyone who leaves keeps the key for months. Give each person a key pair; public keys set up a fresh AES key per conversation (both)</td></tr><tr><td>6</td><td>no forward secrecy: a recording of today's traffic plus a key that leaks next year opens every old session. Move to TLS 1.3, which removed RSA key exchange</td></tr></tbody></table></div>
+<p>Rows 1, 5 and 7 are fine: 1: the hybrid the video ends on, with a fresh key every session; 5: a signature: it hides nothing, it proves the bakery sent it. Only the private key can make one, any oven can check it; 7: one person, so no key to share: symmetric is the right tool.</p>
+<h3>3. The arithmetic</h3>
+<div class='scroll'><table><thead><tr><th>Question</th><th>Arithmetic</th><th>Result</th></tr></thead><tbody><tr><td>(a) a shared key per pair</td><td>40 × 39 ÷ 2</td><td>780 keys</td></tr><tr><td>(a) a key pair each</td><td>2 × 40</td><td>80 keys (9.8× fewer)</td></tr><tr><td>(b) RSA operations</td><td>50,000,000 ÷ 190, rounded up</td><td>263,158</td></tr><tr><td>(b) RSA restore time</td><td>263,158 × 991 µs</td><td>≈ 261 s, about 4 min 21 s</td></tr><tr><td>(b) encrypted size</td><td>263,158 × 256 bytes</td><td>67.4 MB: 35% bigger</td></tr><tr><td>(b) AES instead</td><td>3,125,000 blocks × 8 ns</td><td>≈ 25 ms, same size as the file</td></tr></tbody></table></div>
+<p>Hybrid gets the best of both: one RSA operation (≈ 1 ms) to unwrap the AES key, then AES for the 50 MB. That is how HTTPS works, and how an encrypted backup should.</p></details>
+</section>
+<section><h2>GO FURTHER (EXTERNAL, FREE, LEGAL)</h2><ul><li><a href='https://ssl-config.mozilla.org/' rel='noopener'>Mozilla SSL Configuration Generator</a><span class='ext'>external</span> <span class='muted'>the TLS settings real servers use: compare its “modern” profile with rows 1 and 6</span></li><li><a href='https://cryptohack.org/courses/' rel='noopener'>CryptoHack courses</a><span class='ext'>external</span> <span class='muted'>free interactive lessons on AES, RSA and key exchange, in your browser</span></li></ul></section>
+<footer>Everything here is synthetic: Byte Bakery is fictional, names are reserved
+<span class="mono">.example</span> domains, addresses are documentation IPs.
+Analysis and defence only.
+<nav><a href="../">All labs ▸</a></nav></footer>
+</main>
+<script type="application/json" id="key">{"id": "S4.01", "checks": {"1": {"kind": "choice", "ask": "Pick one for each row.", "options": ["symmetric", "asymmetric", "both"], "items": [{"label": "1 · online shop (shop.bytebakery.example)", "detail": "HTTPS with TLS 1.3: a public-key handshake agrees on a fresh key, then AES-128-GCM", "answer": "both", "why": "the clue: “public-key handshake … then AES”.", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}, {"label": "2 · nightly backup of the orders database", "detail": "RSA-2048-OAEP with the owner's public key, applied to the whole file", "answer": "asymmetric", "why": "the clue: “RSA-2048-OAEP … public key”.", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}, {"label": "3 · customers' cake-design photos, stored", "detail": "AES-128 in ECB mode, one key", "answer": "symmetric", "why": "the clue: “AES-128”, one key.", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}, {"label": "4 · staff chat (40 people)", "detail": "one AES-128 key shared by all 40 staff, changed once a year", "answer": "symmetric", "why": "the clue: “one AES-128 key shared”.", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}, {"label": "5 · recipe updates sent to franchise ovens", "detail": "RSA-PSS signature with the bakery's private key; the ovens hold the public key", "answer": "asymmetric", "why": "the clue: “private key … public key” (a signature).", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}, {"label": "6 · supplier portal (supplier.bytebakery.example)", "detail": "TLS 1.2 with RSA key exchange: each session's key is wrapped with the portal's long-term RSA key, then AES-128-GCM", "answer": "both", "why": "the clue: “session key … wrapped with … RSA key, then AES”.", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}, {"label": "7 · the manager's laptop", "detail": "AES-128 full-disk encryption, unlocked by the manager's passphrase", "answer": "symmetric", "why": "the clue: “AES-128”, one person.", "hint": "Look for the words: one shared key (AES) is symmetric; a public / private key pair is asymmetric; both means one sets up the other."}]}, "2": {"kind": "ticks", "ask": "Tick the four rows with a mistake.", "items": [{"label": "1 · online shop (shop.bytebakery.example)", "detail": "HTTPS with TLS 1.3: a public-key handshake agrees on a fresh key, then AES-128-GCM", "answer": false, "why": "the hybrid the video ends on, with a fresh key every session", "hint": "This one is fine: right tool for who must read it."}, {"label": "2 · nightly backup of the orders database", "detail": "RSA-2048-OAEP with the owner's public key, applied to the whole file", "answer": true, "why": "RSA-OAEP takes at most 190 bytes per operation and is slow (question 3). Use hybrid: AES-128-GCM for the file, the owner's RSA key wraps only the 16-byte AES key", "hint": "Look again: this setup has a problem the video warns about."}, {"label": "3 · customers' cake-design photos, stored", "detail": "AES-128 in ECB mode, one key", "answer": true, "why": "ECB encrypts equal blocks to equal blocks, so a picture's outline shows through (the cupcake logo). Same key, but GCM mode: noise, and tampering is detected", "hint": "Look again: this setup has a problem the video warns about."}, {"label": "4 · staff chat (40 people)", "detail": "one AES-128 key shared by all 40 staff, changed once a year", "answer": true, "why": "everyone can read every chat, and anyone who leaves keeps the key for months. Give each person a key pair; public keys set up a fresh AES key per conversation (both)", "hint": "Look again: this setup has a problem the video warns about."}, {"label": "5 · recipe updates sent to franchise ovens", "detail": "RSA-PSS signature with the bakery's private key; the ovens hold the public key", "answer": false, "why": "a signature: it hides nothing, it proves the bakery sent it. Only the private key can make one, any oven can check it", "hint": "This one is fine: right tool for who must read it."}, {"label": "6 · supplier portal (supplier.bytebakery.example)", "detail": "TLS 1.2 with RSA key exchange: each session's key is wrapped with the portal's long-term RSA key, then AES-128-GCM", "answer": true, "why": "no forward secrecy: a recording of today's traffic plus a key that leaks next year opens every old session. Move to TLS 1.3, which removed RSA key exchange", "hint": "Look again: this setup has a problem the video warns about."}, {"label": "7 · the manager's laptop", "detail": "AES-128 full-disk encryption, unlocked by the manager's passphrase", "answer": false, "why": "one person, so no key to share: symmetric is the right tool", "hint": "This one is fine: right tool for who must read it."}]}, "3": {"kind": "number", "ask": "Fill in each box (round as you like).", "items": [{"label": "(a) a shared AES key for every pair of the 40 staff", "answer": 780, "tol": 0, "unit": "keys", "hint": "Each of 40 people pairs with 39 others, and each pair is counted twice.", "why": "40 × 39 ÷ 2 = 780."}, {"label": "(a) one key pair per person", "answer": 80, "tol": 0, "unit": "keys", "hint": "A key pair is two keys: one public, one private.", "why": "2 × 40 = 80, 9.8× fewer."}, {"label": "(b) RSA operations to restore the backup", "answer": 263158, "tol": 0.001, "unit": "operations", "hint": "50,000,000 bytes, 190 per operation, rounded up.", "why": "50,000,000 ÷ 190 = 263,158 (rounded up)."}, {"label": "(b) how long the restore takes", "answer": 261, "tol": 0.03, "unit": "seconds", "hint": "operations × 991 µs; 1 µs is a millionth of a second.", "why": "263,158 × 991 µs ≈ 261 s, about 4 min 21 s."}, {"label": "(b) size of the RSA-encrypted file", "answer": 67.4, "tol": 0.02, "unit": "MB", "hint": "Each 190-byte piece comes out as 256 bytes.", "why": "263,158 × 256 bytes = 67.4 MB, 35% bigger than the file."}, {"label": "(b) AES for the same file", "answer": 25, "tol": 0.1, "unit": "ms", "hint": "50,000,000 ÷ 16 blocks × 8 ns; 1 ms is a million ns.", "why": "3,125,000 blocks × 8 ns ≈ 25 ms: about 10,376× faster. Hybrid: one RSA operation unwraps the AES key, AES does the rest."}]}}}</script>
+<script>
+(function(){
+document.documentElement.className='js';
+var K=JSON.parse(document.getElementById('key').textContent),C=K.checks,store='secmotion-lab:'+K.id;
+function load(){try{return JSON.parse(localStorage.getItem(store))||{}}catch(e){return {}}}
+function save(){var s={};document.querySelectorAll('.check input,.check select').forEach(function(e){
+ s[e.id]=e.type==='checkbox'?e.checked:e.value});try{localStorage.setItem(store,JSON.stringify(s))}catch(e){}}
+var SUP='⁰¹²³⁴⁵⁶⁷⁸⁹',MULT={k:1e3,thousand:1e3,m:1e6,million:1e6,mn:1e6,b:1e9,bn:1e9,
+ billion:1e9,t:1e12,trillion:1e12};
+function num(s,unit){s=s.toLowerCase().replace(/[−–]/g,'-').replace(/[€$£]/g,'').replace(/^\s*(?:eur|usd|gbp)\s*/,'');
+ var d=s.match(/^\s*(\d+)\s*(?:min|m|:)\s*(\d+(?:\.\d+)?)?\s*(?:s|sec)?\s*$/);
+ if(d&&unit==='seconds')return 60*d[1]+(d[2]?+d[2]:0);
+ if(unit){var u=unit.toLowerCase().trim(),w=s.trim().match(/^(.*\d)\s*([a-z]+)\.?$/);
+  if(u&&s.trim().endsWith(u))s=s.trim().slice(0,-u.length);
+  else if(w&&!MULT[w[2]]&&(u.indexOf(w[2])===0||w[2].length>2&&u.indexOf(w[2].slice(0,-1))===0))s=w[1]}
+ s=s.replace(/[,\s_ ]/g,'').replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g,function(m){
+  return '^'+m.split('').map(function(c){var d=SUP.indexOf(c);return d<0?'-':d}).join('')});
+ s=s.replace(/(?:×|x|\*)10\^?(-?\d+)/,'e$1').replace(/^10\^(-?\d+)/,'1e$1');
+ var m=s.match(/^(-?\d*\.?\d+(?:e[-+]?\d+)?)([a-z]*)$/);if(!m)return NaN;
+ if(!m[2])return parseFloat(m[1]);return MULT[m[2]]?parseFloat(m[1])*MULT[m[2]]:NaN}
+function same(a,b){return a.length===b.length&&a.every(function(x){return b.indexOf(x)>=0})}
+function read(q,c,i,el){var key='q'+q+'-'+i;
+ if(c.kind==='choice')return el.querySelector('select').value;
+ if(c.kind==='ticks')return el.querySelector('input').checked;
+ if(c.kind==='multi')return c.options.filter(function(o,j){return document.getElementById(key+'-'+j).checked});
+ return el.querySelector('input').value}
+function right(c,it,v){if(c.kind==='number'){if(!v.trim())return null;var x=num(v,it.unit);if(isNaN(x))return 'bad';
+  return Math.abs(x-it.answer)<=Math.max((it.tol||0)*Math.abs(it.answer),1e-9)}
+ if(c.kind==='multi')return same(v,it.answer);if(c.kind==='choice'&&!v)return null;return v===it.answer}
+function shown(c,it){if(c.kind==='ticks')return it.answer?'tick it':'leave it';
+ if(c.kind==='multi')return it.answer.length?it.answer.join(' + '):'none';
+ if(c.kind==='number')return Number(it.answer).toLocaleString('en-US')+(it.unit?' '+it.unit:'');return it.answer}
+function check(box,reveal){var q=box.dataset.q,c=C[q],ok=0,blank=0;
+ box.querySelectorAll('.item').forEach(function(el){var i=+el.dataset.i,it=c.items[i],fb=el.querySelector('.fb');
+  el.classList.remove('ok','no','shown');var r=right(c,it,read(q,c,i,el));
+  if(reveal&&r!==true){el.classList.add('shown');fb.innerHTML=shown(c,it)+': '+it.why;return}
+  if(r===null){blank++;return}
+  if(r==='bad'){el.classList.add('no');fb.textContent='I can’t read that as a number. Try 263158, 2.6e5 or 18 billion.';return}
+  if(r){ok++;el.classList.add('ok');fb.innerHTML=it.why}
+  else{el.classList.add('no');fb.innerHTML=it.hint||(c.kind==='number'?'Not quite: check the arithmetic and the unit.':'Not quite: look at the data again.')}});
+ var n=c.items.length,sc=box.querySelector('.score');
+ sc.className='score'+(ok===n?' all':'');
+ sc.textContent=reveal?'answers shown':ok===n?'All '+n+' right ✓':ok+' of '+n+' right'+(blank?' · '+blank+' not answered':'')}
+var saved=load();
+document.querySelectorAll('.check input,.check select').forEach(function(e){if(e.id in saved){
+ if(e.type==='checkbox')e.checked=saved[e.id];else e.value=saved[e.id]}e.addEventListener('change',save)});
+document.querySelectorAll('.check').forEach(function(box){
+ box.querySelector('.go').addEventListener('click',function(){check(box,false)});
+ box.querySelector('.show').addEventListener('click',function(){check(box,true)});
+ box.addEventListener('keydown',function(ev){if(ev.key==='Enter'&&ev.target.tagName==='INPUT'&&ev.target.type==='text'){ev.preventDefault();check(box,false)}})});
+})();
+</script>
+</body></html>

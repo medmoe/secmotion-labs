@@ -1,0 +1,8 @@
+row,system,protects,who must read it,current setup
+1,online shop (shop.bytebakery.example),orders and card numbers on their way,the customer and the shop,"HTTPS with TLS 1.3: a public-key handshake agrees on a fresh key, then AES-128-GCM"
+2,nightly backup of the orders database,a 50 MB file,"the owner, when restoring","RSA-2048-OAEP with the owner's public key, applied to the whole file"
+3,"customers' cake-design photos, stored",uploaded images,the shop,"AES-128 in ECB mode, one key"
+4,staff chat (40 people),private messages between two staff,the two people chatting,"one AES-128 key shared by all 40 staff, changed once a year"
+5,recipe updates sent to franchise ovens,recipes (not secret),"every oven, which must trust them",RSA-PSS signature with the bakery's private key; the ovens hold the public key
+6,supplier portal (supplier.bytebakery.example),invoices on their way,the bakery and the supplier,"TLS 1.2 with RSA key exchange: each session's key is wrapped with the portal's long-term RSA key, then AES-128-GCM"
+7,the manager's laptop,everything on its disk,the manager only,"AES-128 full-disk encryption, unlocked by the manager's passphrase"
