@@ -1,0 +1,8 @@
+row,server,what it does,OpenSSL,history
+1,shop.bytebakery.example,"online shop: customer logins, orders",1.0.1f,installed Jan 2014; key and certificate from 2013
+2,mail.bytebakery.example,staff email over TLS,0.9.8y,running since 2013
+3,supplier.bytebakery.example,"supplier portal: invoices, supplier logins",1.0.1g,upgraded from 1.0.1e on 8 Apr 2014; key and certificate unchanged since 2013
+4,stock.bytebakery.example,"stock system, reachable from the office network only",1.0.1,running since 2012
+5,ovens.bytebakery.example,recipe updates to franchise ovens,1.0.0l,running since Jan 2014
+6,staging.bytebakery.example,"test copy of the shop, open to the internet",1.0.1c,running since 2012; the heartbeat trace comes from here
+7,pay.bytebakery.example,new checkout page,1.0.1g,set up 9 Apr 2014; its key was generated that day
